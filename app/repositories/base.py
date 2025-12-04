@@ -1,0 +1,68 @@
+"""Base repository with generic CRUD operations."""
+
+from app.connection.setup import DatabaseSetup
+
+
+class BaseRepository:
+    """Generic CRUD operations for all models."""
+
+    def __init__(self, model_class):
+        self.model_class = model_class
+        self.session = DatabaseSetup.get_session()
+
+    def get_all(self):
+        """Retrieve all records of the model."""
+        return self.session.query(self.model_class).all()
+
+    def get_by_id(self, pk):
+        """Retrieve a record by its ID."""
+        return self.session.query(self.model_class).get(pk)
+
+    def insert(self, obj):
+        """Insert a new record into the database."""
+        try:
+            self.session.add(obj)
+            self.session.commit()
+            # optional, ensures obj has updated fields (like auto-generated id)
+            self.session.refresh(obj)
+            return obj
+        except Exception as e:
+            self.session.rollback()
+            raise e
+
+    def bulk_insert(self, data_list):
+        """Bulk insert multiple records using mappings (dicts) without loading into memory.
+
+        Args:
+            data_list (list): List of dictionaries with column values.
+
+        Returns:
+            None
+        """
+        if not data_list:
+            return
+        try:
+            self.session.bulk_insert_mappings(self.model_class, data_list)
+            self.session.commit()
+        except Exception as e:
+            self.session.rollback()
+            raise e
+
+    def delete(self, obj):
+        """Delete a record from the database."""
+        try:
+            self.session.delete(obj)
+            self.session.commit()
+        except Exception as e:
+            self.session.rollback()
+            raise e
+
+    def update(self, obj):
+        """Commit changes to a record in the database."""
+        try:
+            self.session.commit()
+            self.session.refresh(obj)
+            return obj
+        except Exception as e:
+            self.session.rollback()
+            raise e

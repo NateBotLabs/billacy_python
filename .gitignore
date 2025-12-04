@@ -1,0 +1,56 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pyc
+*.pdb
+*.pyt
+*.pyinstaller
+
+# Virtual environment
+.venv/
+venv/
+env/
+ENV/
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+*.egg
+*.whl
+*.exe  # If you generate exe locally
+
+# Alembic / Migrations
+migrations/versions/*.pyc
+migrations/versions/*.pyo
+
+# SQLite / database files
+*.db
+*.sqlite3
+
+# Logs
+*.log
+
+# IDE / Editor
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Environment variables
+.env
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Docker
+docker-compose.override.yml
+*.dockerignore
+
+# PyInstaller
+*.spec
+dist/
+build/
+docker_compose/
