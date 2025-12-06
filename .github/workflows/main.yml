@@ -49,9 +49,14 @@ jobs:
         
       - name: Load CI environment
         run: |
-          set -o allexport
-          source  $GITHUB_WORKSPACE/.env.test.github
-          set +o allexport
+          echo "Loading environment variables..."
+          cat $GITHUB_WORKSPACE/.env.test.github | sed '/^$/d' | sed 's/^/export /' > temp_env.sh
+          source temp_env.sh
+          # Write each variable into $GITHUB_ENV
+          while read line; do
+            echo "$line" | sed 's/export //' >> $GITHUB_ENV
+          done < temp_env.sh
+
 
       - name: Print environment variables
         run: |
