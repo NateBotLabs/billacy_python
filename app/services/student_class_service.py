@@ -1,5 +1,5 @@
 """Service layer for StudentClass operations."""
-from app.repositories.student_class_repository import StudentClassRepository
+from app.repositories.repos.student_class_repository import StudentClassRepository
 from app.models.student_class import StudentClass
 from app.utils.logger import logger
 

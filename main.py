@@ -1,3 +1,4 @@
+""""""
 # main.py
 import os
 import sys
@@ -5,6 +6,9 @@ from app.connection.setup import DatabaseSetup
 from app.gui.app import run_app
 from app.utils.logger import logger
 from app.utils.errors import UnexpectedError
+
+sys.dont_write_bytecode = True
+os.environ['PYTHONDONTWRITEBYTECODE'] = '1'
 
 
 def main():

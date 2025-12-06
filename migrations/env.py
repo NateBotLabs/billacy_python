@@ -89,7 +89,6 @@ def run_migrations_online() -> None:
         f"{os.getenv('MYSQL_DB_NAME')}"
     )
 
-
     connectable = create_engine(db_url, poolclass=pool.NullPool)
 
     with connectable.connect() as connection:

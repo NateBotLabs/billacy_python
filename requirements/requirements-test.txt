@@ -1,0 +1,7 @@
+-r requirements.txt
+
+
+factory_boy==3.3.3
+Faker==38.2.0
+pytest==9.0.1
+pytest-cov==7.0.0

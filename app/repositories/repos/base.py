@@ -16,7 +16,7 @@ class BaseRepository:
 
     def get_by_id(self, pk):
         """Retrieve a record by its ID."""
-        return self.session.query(self.model_class).get(pk)
+        return self.session.get(self.model_class, pk)
 
     def insert(self, obj):
         """Insert a new record into the database."""

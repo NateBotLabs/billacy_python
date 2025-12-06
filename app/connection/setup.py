@@ -12,6 +12,7 @@ from dotenv import load_dotenv
 from app.utils.errors import DatabaseNotInitializedError, UnknownEnvironmentError
 from app.utils.logger import logger
 
+
 class DatabaseSetup:
     """
     Singleton-style database setup with environment-specific configuration.
@@ -73,6 +74,17 @@ class DatabaseSetup:
             raise DatabaseNotInitializedError(
                 "DatabaseSetup not initialized. Call initialize() first.")
         return cls.session
+
+    @classmethod
+    def get_engine(cls):
+        """
+        Returns the current database engine.
+        Raises DatabaseNotInitializedError if the engine is not initialized.
+        """
+        if cls._engine is None:
+            raise DatabaseNotInitializedError(
+                "DatabaseSetup not initialized. Call initialize() first.")
+        return cls._engine
 
     @classmethod
     def close(cls):
