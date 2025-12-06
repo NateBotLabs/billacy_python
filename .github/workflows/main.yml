@@ -44,9 +44,20 @@ jobs:
             echo "Waiting for MySQL..."
             sleep 2
           done
+
+
         
       - name: Load CI environment
         run: python -c "from dotenv import load_dotenv; load_dotenv('.env.test.github')"
+
+      - name: Print environment variables
+        run: |
+          echo "ENV=$ENV"
+          echo "MYSQL_DB_USER=$MYSQL_DB_USER"
+          echo "MYSQL_DB_PASSWORD=$MYSQL_DB_PASSWORD"
+          echo "MYSQL_DB_HOST=$MYSQL_DB_HOST"
+          echo "MYSQL_DB_NAME=$MYSQL_DB_NAME"
+          echo "MYSQL_DB_PORT=$MYSQL_DB_PORT"
 
       - name: Run Alembic migrations
         run: alembic upgrade head
