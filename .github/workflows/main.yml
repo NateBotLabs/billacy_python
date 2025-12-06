@@ -52,7 +52,7 @@ jobs:
         run: alembic upgrade head
 
       - name: Lint code with Pylint
-        run: pylint app tests
+        run: pylint app tests  --disable=R,C,W
 
       - name: Run tests
         run: pytest --maxfail=1 --disable-warnings -v

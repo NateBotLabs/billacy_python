@@ -18,7 +18,7 @@ class TestInvoiceService(BaseTest):
 
         self.service.create_invoice_for_user(user.id, items_data)
 
-        saved_invoice = RepoRegistry(
+        saved_invoice = RepoRegistry.get(
             RepoName.INVOICE).get_by_user_id(user.id)[0]
         assert saved_invoice is not None
         assert saved_invoice.user_id == user.id
@@ -26,6 +26,6 @@ class TestInvoiceService(BaseTest):
 
     def test_create_invoice_with_factory(self):
         invoice = InvoiceFactory()
-        saved_invoice = RepoRegistry(
+        saved_invoice = RepoRegistry.get(
             RepoName.INVOICE).get_by_id(invoice.id)
         assert saved_invoice is not None

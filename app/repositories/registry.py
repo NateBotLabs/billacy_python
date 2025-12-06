@@ -30,7 +30,8 @@ class RepoRegistry:
 
     _instances = {}  # Cache of repository instances
 
-    def __new__(cls, repo_symbol: RepoName):
+    @classmethod
+    def get(cls, repo_symbol: RepoName):
         if repo_symbol in cls._instances:
             return cls._instances[repo_symbol]  # Return cached instance
 
