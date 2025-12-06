@@ -48,7 +48,10 @@ jobs:
 
         
       - name: Load CI environment
-        run: python -c "from dotenv import load_dotenv; load_dotenv('.env.test.github')"
+        run: |
+          set -o allexport
+          source  $GITHUB_WORKSPACE/.env.test.github
+          set +o allexport
 
       - name: Print environment variables
         run: |
