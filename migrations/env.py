@@ -20,7 +20,10 @@ env_name = os.getenv("ENV", "development").lower()
 if env_name == "development":
     load_dotenv(".env.development.local")
 elif env_name == "test":
-    load_dotenv(".env.test.local")
+    if os.getenv("GITHUB_ACTIONS"):
+        load_dotenv(".env.test.github")
+    else:
+        load_dotenv(".env.test.local")
 else:
     raise UnknownEnvironmentError(f"Unknown ENV value: {env_name}")
 
