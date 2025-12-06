@@ -2,3 +2,4 @@ alembic==1.17.2
 python-dotenv==1.2.1
 SQLAlchemy==2.0.44
 mysql-connector-python==9.5.0
+pylint==4.0.4
