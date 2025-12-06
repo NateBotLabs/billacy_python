@@ -57,16 +57,6 @@ jobs:
             echo "$line" | sed 's/export //' >> $GITHUB_ENV
           done < temp_env.sh
 
-
-      - name: Print environment variables
-        run: |
-          echo "ENV=$ENV"
-          echo "MYSQL_DB_USER=$MYSQL_DB_USER"
-          echo "MYSQL_DB_PASSWORD=$MYSQL_DB_PASSWORD"
-          echo "MYSQL_DB_HOST=$MYSQL_DB_HOST"
-          echo "MYSQL_DB_NAME=$MYSQL_DB_NAME"
-          echo "MYSQL_DB_PORT=$MYSQL_DB_PORT"
-
       - name: Run Alembic migrations
         run: alembic upgrade head
 
