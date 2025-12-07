@@ -55,7 +55,7 @@ class DatabaseSetup:
         )
         cls._SessionLocal = sessionmaker(bind=cls._engine)
         if create_session:
-            cls._session = cls._SessionLocal()  # type: ignore[E1102]
+            cls._session = cls._SessionLocal()  # pylint: disable=not-callable
             try:
                 cls._session.execute(text("SELECT 1"))
                 logger.info(
