@@ -43,6 +43,18 @@ jobs:
       - uses: actions/setup-python@v4
         with:
           python-version: "3.14"
+    
+      - name: Load env file
+        run: |
+          echo "Loading env from $(pwd)"
+          cat .env.test.github
+          while read -r line || [[ -n "$line" ]]; do
+            # skip comments and empty lines
+            if [[ ! "$line" =~ ^# ]] && [[ -n "$line" ]]; then
+              echo "$line" >> $GITHUB_ENV
+            fi
+          done < .env.test.github
+
 
       - name: Install dependencies
         run: pip install -r requirements/requirements-test.txt
