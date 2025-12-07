@@ -17,7 +17,8 @@ target_metadata = Base.metadata
 def run_migrations_offline():
     """Run migrations in 'offline' mode (no DB connection)."""
     # Use DatabaseSetup to load env and build URL
-    DatabaseSetup.initialize()  # initializes env and engine
+    # initializes env and engine
+    DatabaseSetup.initialize(create_session=False)
     engine = DatabaseSetup.get_engine()
     url = str(engine.url)  # get the connection URL
 

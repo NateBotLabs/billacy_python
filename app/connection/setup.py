@@ -18,11 +18,11 @@ class DatabaseSetup:
     Singleton-style database setup. Ensures one engine and session per process.
     """
     _engine = None
-    _SessionLocal = None
-    _session: Session = None
+    _SessionLocal: sessionmaker | None = None
+    _session: Session | None = None
 
     @classmethod
-    def initialize(cls):
+    def initialize(cls, create_session: bool = True):
         """
         Initializes engine and session depending on ENV.
         Subsequent calls return the existing session.
@@ -38,11 +38,11 @@ class DatabaseSetup:
 
         load_dotenv(dotenv_file)
 
-        user = os.getenv("MYSQL_DB_USER")
-        password = os.getenv("MYSQL_DB_PASSWORD")
-        host = os.getenv("MYSQL_DB_HOST")
-        database = os.getenv("MYSQL_DB_NAME")
-        port = os.getenv("MYSQL_DB_PORT", "3306")
+        user = os.getenv("MYSQL_DB_USER", None)
+        password = os.getenv("MYSQL_DB_PASSWORD", None)
+        host = os.getenv("MYSQL_DB_HOST", None)
+        database = os.getenv("MYSQL_DB_NAME", None)
+        port = os.getenv("MYSQL_DB_PORT", None)
 
         if not all([user, password, host, database]):
             raise DatabaseNotInitializedError(
@@ -54,17 +54,17 @@ class DatabaseSetup:
             echo=False
         )
         cls._SessionLocal = sessionmaker(bind=cls._engine)
-        cls._session = cls._SessionLocal
-
-        # Test connection
-        try:
-            cls._session.execute(text("SELECT 1"))
-            logger.info("Database connection alive for %s environment!", env)
-        except OperationalError as e:
-            logger.error(
-                "Could not connect to the %s database: %s", env, str(e))
-            cls._session = None
-            raise
+        if create_session:
+            cls._session = cls._SessionLocal()  # type: ignore[E1102]
+            try:
+                cls._session.execute(text("SELECT 1"))
+                logger.info(
+                    "Database connection alive for %s environment!", env)
+            except OperationalError as e:
+                logger.error(
+                    "Could not connect to the %s database: %s", env, str(e))
+                cls._session = None
+                raise
 
         return cls._session
 
