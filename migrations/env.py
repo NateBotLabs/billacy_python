@@ -1,71 +1,26 @@
 from logging.config import fileConfig
-import os
-from sqlalchemy import pool, engine_from_config, create_engine
-from sqlalchemy import Column, Integer, String
-from sqlalchemy.ext.declarative import declarative_base
-from app.models import Base
-from app.models import User, Invoice, StudentClass, Item
-from dotenv import load_dotenv
-from app.utils.errors import UnknownEnvironmentError
-
 from alembic import context
+from app.models import Base
+from app.connection.setup import DatabaseSetup
 
-# this is the Alembic Config object, which provides
-# access to the values within the .ini file in use.
+# Alembic Config object
 config = context.config
 
-
-env_name = os.getenv("ENV", "development").lower()
-
-if env_name == "development":
-    load_dotenv(".env.development.local")
-elif env_name == "test":
-    if os.getenv("GITHUB_ACTIONS"):
-        load_dotenv(".env.test.github")
-    else:
-        load_dotenv(".env.test.local")
-else:
-    raise UnknownEnvironmentError(f"Unknown ENV value: {env_name}")
-
-# Interpret the config file for Python logging.
-# This line sets up loggers basically.
+# Set up logging from config file
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
-# add your model's MetaData object here
-# for 'autogenerate' support
-# from myapp import mymodel
-# target_metadata = mymodel.Base.metadata
+# Target metadata for 'autogenerate'
 target_metadata = Base.metadata
 
-# other values from the config, defined by the needs of env.py,
-# can be acquired:
-# my_important_option = config.get_main_option("my_important_option")
-# ... etc.
 
+def run_migrations_offline():
+    """Run migrations in 'offline' mode (no DB connection)."""
+    # Use DatabaseSetup to load env and build URL
+    DatabaseSetup.initialize()  # initializes env and engine
+    engine = DatabaseSetup.get_engine()
+    url = str(engine.url)  # get the connection URL
 
-def run_migrations_offline() -> None:
-    """Run migrations in 'offline' mode.
-
-    This configures the context with just a URL
-    and not an Engine, though an Engine is acceptable
-    here as well.  By skipping the Engine creation
-    we don't even need a DBAPI to be available.
-
-    Calls to context.execute() here emit the given string to the
-    script output.
-
-    """
-
-    db_url = (
-        f"mysql+mysqlconnector://"
-        f"{os.getenv('MYSQL_DB_USER')}:{os.getenv('MYSQL_DB_PASSWORD')}"
-        f"@{os.getenv('MYSQL_DB_HOST')}:{os.getenv('MYSQL_DB_PORT', '3306')}/"
-        f"{os.getenv('MYSQL_DB_NAME')}"
-    )
-
-    config.set_main_option("sqlalchemy.url", db_url)
-    url = config.get_main_option("sqlalchemy.url")
     context.configure(
         url=url,
         target_metadata=target_metadata,
@@ -77,32 +32,20 @@ def run_migrations_offline() -> None:
         context.run_migrations()
 
 
-def run_migrations_online() -> None:
-    """Run migrations in 'online' mode.
+def run_migrations_online():
+    """Run migrations in 'online' mode (with DB connection)."""
+    # Use DatabaseSetup to get engine
+    DatabaseSetup.initialize()
+    engine = DatabaseSetup.get_engine()
 
-    In this scenario we need to create an Engine
-    and associate a connection with the context.
-
-    """
-
-    db_url = (
-        f"mysql+mysqlconnector://"
-        f"{os.getenv('MYSQL_DB_USER')}:{os.getenv('MYSQL_DB_PASSWORD')}"
-        f"@{os.getenv('MYSQL_DB_HOST')}:{os.getenv('MYSQL_DB_PORT', '3306')}/"
-        f"{os.getenv('MYSQL_DB_NAME')}"
-    )
-
-    connectable = create_engine(db_url, poolclass=pool.NullPool)
-
-    with connectable.connect() as connection:
-        context.configure(
-            connection=connection, target_metadata=target_metadata
-        )
-
+    with engine.connect() as connection:
+        context.configure(connection=connection,
+                          target_metadata=target_metadata)
         with context.begin_transaction():
             context.run_migrations()
 
 
+# Decide mode
 if context.is_offline_mode():
     run_migrations_offline()
 else:
