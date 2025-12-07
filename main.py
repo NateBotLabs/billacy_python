@@ -1,4 +1,4 @@
-""""""
+"""main entry point for the app"""
 # main.py
 import os
 import sys

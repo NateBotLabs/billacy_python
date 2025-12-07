@@ -1,6 +1,7 @@
 """"Custom error classes for operations.
 """
 
+
 class DatabaseNotInitializedError(RuntimeError):
     """Raised when the database session is accessed before initialization."""
 
@@ -15,3 +16,7 @@ class RecordNotFoundError(LookupError):
 
 class UnexpectedError(Exception):
     """Raised for unexpected errors in the application."""
+
+
+class LoginIssueError(Exception):
+    """Raised for login issue errors"""

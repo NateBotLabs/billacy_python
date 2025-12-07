@@ -65,6 +65,11 @@ alembic upgrade head
 alembic revision --autogenerate -m "Migration description"
 alembic upgrade head
 ```
+## Testing
+
+```bash
+pytest --cov=app --cov-fail-under=70
+```
 
 ## Running the App
 

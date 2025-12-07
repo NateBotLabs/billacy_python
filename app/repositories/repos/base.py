@@ -18,6 +18,10 @@ class BaseRepository:
         """Retrieve a record by its ID."""
         return self.session.get(self.model_class, pk)
 
+    def get_first_item(self):
+        """Get one item from the """
+        return self.session.query(self.model_class).first()
+
     def insert(self, obj):
         """Insert a new record into the database."""
         try:

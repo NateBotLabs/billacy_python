@@ -6,7 +6,7 @@ from app.services.invoice_service import InvoiceService
 class TestInvoiceService(BaseTest):
 
     def setup_method(self):
-        self.service = InvoiceService()  # safe: no factories here
+        self.service = InvoiceService()
 
     def test_create_invoice_for_user(self):
         # Factory instance created inside test -> session attached
