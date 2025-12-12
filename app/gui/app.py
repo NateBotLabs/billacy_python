@@ -83,8 +83,8 @@ def run_app():
     # Main pages (created once)
     main_pages = {
         "Dashboard": DashboardPage(container, user_service, invoice_service),
-        "Users": UsersPage(container, user_service),
-        "Invoices": InvoicesPage(container, invoice_service),
+        "Users": UsersPage(container, user_service, student_class_service),
+        "Invoices": InvoicesPage(container, invoice_service, user_service),
         "Classes": ClassesPage(container, student_class_service),
         "Settings": SettingsPage(container)
     }

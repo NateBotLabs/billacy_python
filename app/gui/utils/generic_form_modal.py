@@ -36,9 +36,21 @@ class GenericFormModal(tk.Toplevel):
             label = tk.Label(container, text=field["label"])
             label.grid(row=idx, column=0, padx=5, pady=5, sticky="w")
 
-            entry = tk.Entry(container)
-            entry.grid(row=idx, column=1, padx=5, pady=5)
+            if "options" in field and field["options"]:
+                # Use Combobox for dropdown
+                entry = ttk.Combobox(
+                    container, values=field["options"], state="readonly")
+                if "value" in field and field["value"] is not None:
+                    entry.set(field["value"])
+                else:
+                    entry.set(field["options"][0])  # default to first option
+            else:
+                # Default: regular Entry
+                entry = tk.Entry(container)
+                if "value" in field and field["value"] is not None:
+                    entry.insert(0, str(field["value"]))
 
+            entry.grid(row=idx, column=1, padx=5, pady=5)
             self.entries[field["label"]] = entry
 
         # Buttons
