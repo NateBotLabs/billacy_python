@@ -1,12 +1,12 @@
 # app/repositories/registry.py
 from enum import Enum
-from app.connection.setup import DatabaseSetup
 
 # Import repositories
 from .repos.invoice_repository import InvoiceRepository
 from .repos.item_repository import ItemRepository
 from .repos.student_class_repository import StudentClassRepository
 from .repos.user_repository import UserRepository
+from .repos.media_repository import MediaRepository
 
 
 class RepoName(str, Enum):
@@ -14,6 +14,7 @@ class RepoName(str, Enum):
     ITEM = "item"
     STUDENT_CLASS = "student_class"
     USER = "user"
+    MEDIA = "media"
 
 
 # Map symbols to repository classes
@@ -22,6 +23,7 @@ REPO_MAP = {
     RepoName.ITEM: ItemRepository,
     RepoName.STUDENT_CLASS: StudentClassRepository,
     RepoName.USER: UserRepository,
+    RepoName.MEDIA: MediaRepository,
 }
 
 

@@ -5,3 +5,4 @@ from .user import User
 from .invoice import Invoice
 from .student_class import StudentClass
 from .item import Item
+from .media import Media

@@ -53,7 +53,7 @@ class ClassesPage(tk.Frame):
         self.tree = CheckableTreeView(
             self,
             columns=["ID", "Name", "Description", "Tutor", "Tuition Fee"],
-            height=12
+            height=30
         )
         self.tree.grid(row=2, column=0, sticky="nsew", pady=10)
 
@@ -88,7 +88,7 @@ class ClassesPage(tk.Frame):
                     name=data["Name"],
                     description=data["Description"],
                     tutor=data["Tutor"],
-                    tuition_fee=float(data["Tuition Fee"], 2)
+                    tuition_fee=float(data["Tuition Fee"])
                 )
                 messagebox.showinfo(
                     "Success", f"Class '{new_class.name}' added!")
@@ -121,13 +121,12 @@ class ClassesPage(tk.Frame):
         for class_id in checked_ids:
             try:
                 self.classes_service.delete_student_classes(class_id)
+                messagebox.showinfo(
+                    "Deleted", "Selected classes removed successfully.")
             except Exception as e:
                 logger.error(f"Failed to delete class id={class_id}: {e}")
                 messagebox.showerror(
                     "Error", f"Failed to delete class ID {class_id}")
-
-        messagebox.showinfo(
-            "Deleted", "Selected classes removed successfully.")
         self.refresh_list()
 
     def edit_class(self):
@@ -148,7 +147,7 @@ class ClassesPage(tk.Frame):
 
         def handle_submit(data):
             try:
-                updated_class = self.classes_service.update_student_class(
+                updated_class = self.classes_service.edit_student_class(
                     class_id=iid,
                     name=data["Name"],
                     description=data["Description"],

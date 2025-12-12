@@ -2,6 +2,10 @@
 """
 
 
+class FTPConnectionError(RuntimeError):
+    """Raised when there is an FTP connection error."""
+
+
 class DatabaseNotInitializedError(RuntimeError):
     """Raised when the database session is accessed before initialization."""
 

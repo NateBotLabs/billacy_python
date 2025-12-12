@@ -2,21 +2,29 @@
 # conftest.py
 import os
 import sys
-import warnings
 import pytest
 from sqlalchemy import text
+from alembic.config import Config
+from alembic import command
 from app.connection.setup import DatabaseSetup
 from app.models.base import Base
 
 
 sys.dont_write_bytecode = True
 os.environ['PYTHONDONTWRITEBYTECODE'] = '1'
+os.environ["ENV"] = "test"
+
+
+@pytest.fixture(scope="session", autouse=True)
+def run_alembic_upgrade():
+    """Automatically upgrade the database before tests."""
+    alembic_cfg = Config("alembic.ini")
+    command.upgrade(alembic_cfg, "head")
 
 
 @pytest.fixture(scope="session")
 def setup_test_db():
     """Set up the test database for the test session."""
-    os.environ["ENV"] = "test"
 
     # Initialize database
     session = DatabaseSetup.initialize()
@@ -29,7 +37,7 @@ def setup_test_db():
     yield session
 
     # Clean up after all tests
-    Base.metadata.drop_all(bind=engine) # delete all tables from sqlalchemy
+    Base.metadata.drop_all(bind=engine)  # delete all tables from sqlalchemy
     DatabaseSetup.close()
 
 
@@ -50,4 +58,3 @@ def db_session(setup_test_db):
 
     # Rollback any changes to keep session clean
     session.rollback()
-

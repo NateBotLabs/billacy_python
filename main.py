@@ -3,12 +3,14 @@
 import os
 import sys
 from app.connection.setup import DatabaseSetup
+from app.connection.ftp_client import FTPClient
 from app.gui.app import run_app
 from app.utils.logger import logger
 from app.utils.errors import UnexpectedError
 
 sys.dont_write_bytecode = True
 os.environ['PYTHONDONTWRITEBYTECODE'] = '1'
+sys.stdout.reconfigure(encoding='utf-8')
 
 
 def main():
@@ -21,6 +23,11 @@ def main():
         if session is None:
             logger.error("Failed to connect to database. Exiting...")
             sys.exit(1)
+        
+        ftp = FTPClient.initialize()
+        if ftp is None:
+            logger.error("Failed to connect to FTP server. Exiting...")
+            sys.exit(1)
 
         # Launch GUI
         run_app()
@@ -32,6 +39,7 @@ def main():
     finally:
         # Close DB session safely on exit
         DatabaseSetup.close()
+        FTPClient.close()
         logger.info("Application shutdown, DB session closed.")
 
 

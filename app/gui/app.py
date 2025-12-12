@@ -54,6 +54,13 @@ def run_app():
     nav_buttons = {}
     active_btn = None
 
+    # Login callback
+    def on_login():
+        nonlocal logged_in
+        logged_in = True
+        nav_frame.pack(side="left", fill="y")
+        show_page("Dashboard")
+
     # Function to show a page
     def show_page(name):
         nonlocal active_btn
@@ -74,17 +81,17 @@ def run_app():
     )
     pages["Welcome"].grid(row=0, column=0, sticky="nsew")
 
-    pages["Login"] = LoginPage(container, login_callback=lambda: on_login())
+    pages["Login"] = LoginPage(container, login_callback=on_login)
     pages["Login"].grid(row=0, column=0, sticky="nsew")
 
-    pages["SignUp"] = SignupPage(container, signup_callback=lambda: on_login())
+    pages["SignUp"] = SignupPage(container, signup_callback=on_login)
     pages["SignUp"].grid(row=0, column=0, sticky="nsew")
 
     # Main pages (created once)
     main_pages = {
         "Dashboard": DashboardPage(container, user_service, invoice_service),
-        "Users": UsersPage(container, user_service),
-        "Invoices": InvoicesPage(container, invoice_service),
+        "Users": UsersPage(container, user_service, student_class_service),
+        "Invoices": InvoicesPage(container, invoice_service, user_service),
         "Classes": ClassesPage(container, student_class_service),
         "Settings": SettingsPage(container)
     }
@@ -148,13 +155,6 @@ def run_app():
 
     # Initially hide nav
     nav_frame.pack_forget()
-
-    # Login callback
-    def on_login():
-        nonlocal logged_in
-        logged_in = True
-        nav_frame.pack(side="left", fill="y")
-        show_page("Dashboard")
 
     # Logout callback
     def on_logout():

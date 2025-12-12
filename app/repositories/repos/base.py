@@ -10,9 +10,12 @@ class BaseRepository:
         self.model_class = model_class
         self.session = DatabaseSetup.get_session()
 
-    def get_all(self):
+    def get_all(self, filter=None):
         """Retrieve all records of the model."""
-        return self.session.query(self.model_class).all()
+        query = self.session.query(self.model_class)
+        if filter is not None:
+            query = query.filter(filter)
+        return query.all()
 
     def get_by_id(self, pk):
         """Retrieve a record by its ID."""
@@ -21,6 +24,21 @@ class BaseRepository:
     def get_first_item(self):
         """Get one item from the """
         return self.session.query(self.model_class).first()
+
+    def get_latest(self, condition_field, order_by_field):
+        """Get the latest record based on a condition field."""
+        return self.session.query(self.model_class).filter(condition_field).order_by(order_by_field.desc()).first()
+
+    def delete_by_ids(self, pks):
+        """Delete multiple StudentClass records by their IDs."""
+        session = self.session
+        try:
+            session.query(self.model_class).filter(self.model_class.id.in_(
+                pks)).delete(synchronize_session='fetch')
+            session.commit()
+        except Exception as e:
+            session.rollback()
+            raise e
 
     def insert(self, obj):
         """Insert a new record into the database."""
