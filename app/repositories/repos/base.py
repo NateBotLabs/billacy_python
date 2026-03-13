@@ -40,17 +40,6 @@ class BaseRepository:
             session.rollback()
             raise e
 
-    def delete_by_ids(self, pks):
-        """Delete multiple StudentClass records by their IDs."""
-        session = self.session
-        try:
-            session.query(self.model_class).filter(self.model_class.id.in_(
-                pks)).delete(synchronize_session='fetch')
-            session.commit()
-        except Exception as e:
-            session.rollback()
-            raise e
-
     def insert(self, obj):
         """Insert a new record into the database."""
         try:

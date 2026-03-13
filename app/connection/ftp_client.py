@@ -1,5 +1,6 @@
 import os
 import time
+from io import BytesIO
 from ftplib import FTP, error_perm, all_errors
 from pathlib import Path
 from dotenv import load_dotenv
@@ -98,8 +99,6 @@ class FTPClient:
             data (bytes): Data to upload.
             remote_path (str): Path on the server.
         """
-        from io import BytesIO
-
         for attempt in range(1, cls.RETRY_COUNT + 1):
             try:
                 with BytesIO(data) as bio:

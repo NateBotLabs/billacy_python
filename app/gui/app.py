@@ -4,6 +4,7 @@ from pathlib import Path
 from app.connection.setup import DatabaseSetup
 from app.gui.pages.dashboard import DashboardPage
 from app.gui.pages.student_classes import ClassesPage
+from app.gui.pages.items import ItemsPage
 from app.gui.pages.welcome import WelcomePage
 from app.gui.pages.auth.login import LoginPage
 from app.gui.pages.auth.sign_up import SignupPage
@@ -13,6 +14,7 @@ from app.gui.pages.settings import SettingsPage
 from app.services.user_service import UserService
 from app.services.invoice_service import InvoiceService
 from app.services.student_class_service import StudentClassService
+from app.services.item_service import ItemService
 from app.gui.utils.style_manager import StyleManager
 from app.utils.logger import logger
 from app.gui.utils.constants import ICON_PATH, LOGOUT_ICON_PATH
@@ -28,6 +30,7 @@ def run_app():
     user_service = UserService()
     invoice_service = InvoiceService()
     student_class_service = StudentClassService()
+    items_class_service = ItemService()
     logged_in = False
 
     # Root window
@@ -93,6 +96,7 @@ def run_app():
         "Users": UsersPage(container, user_service, student_class_service),
         "Invoices": InvoicesPage(container, invoice_service, user_service),
         "Classes": ClassesPage(container, student_class_service),
+        "Items": ItemsPage(container, items_class_service),
         "Settings": SettingsPage(container)
     }
     pages.update(main_pages)
@@ -106,6 +110,7 @@ def run_app():
     icon_paths = {
         "Dashboard": APP_DIR / "assets/images/icons/dashboard.png",
         "Users": APP_DIR / "assets/images/icons/users.png",
+        "Items": APP_DIR / "assets/images/icons/items.png",
         "Invoices": APP_DIR / "assets/images/icons/invoices.png",
         "Classes": APP_DIR / "assets/images/icons/classes.png",
         "Settings": APP_DIR / "assets/images/icons/settings.png"
